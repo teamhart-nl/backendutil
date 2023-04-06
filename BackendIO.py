@@ -179,22 +179,29 @@ class BackendIO:
             r = requests.post(self.__url__() + "/devices/pattern", json=payload)
         return r.status_code
 
-    def encoding(self, encoding: str) -> int:
+    def encoding(self, encoding_pattern: str, force_now: bool = False) -> int:
         """Transmits an encoding to the backend.
         See https://github.com/teamhart-nl/vibration-engine#encoding
 
         Args:
-        - encoding (`str`): The encoding string
+        - encoding_pattern (`str`): The encoding pattern string
+        - force_now (`bool`, optional): Whether to force the encoding to be transmitted now.
+                Removes the queue of encodings. Defaults to `False`.
 
         Returns:
         - `int`: The return code.
         """
         # Make a post request to the API
-        self.__log_info__("Transmitting encoding. Encoding: {}".format(encoding))
+        self.__log_info__("Transmitting encoding. Encoding: {}, Force now: {}".format(encoding_pattern, force_now))
+        datapacket = {
+            "encoding": encoding_pattern,
+            "force_now": force_now
+        }
+        self.__log_verbose__("Transmitting encoding. Datapacket: {}".format(datapacket))
         if self.__use_session__:
-            r = self.__session__.post(self.__url__() + "/devices/encoding", json={"encoding": encoding})
+            r = self.__session__.post(self.__url__() + "/devices/encoding", json=datapacket)
         else:
-            r = requests.post(self.__url__() + "/devices/encoding", json={"encoding": encoding})
+            r = requests.post(self.__url__() + "/devices/encoding", json=datapacket)
         code = r.status_code
 
         return code
