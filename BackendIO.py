@@ -193,12 +193,13 @@ class BackendIO:
         - `int`: The return code.
         """
         # Make a post request to the API
-        self.__info__("Transmitting encoding. Encoding: {}, Force now: {}".format(encoding_pattern, force_now))
         datapacket = {
-            "encoding": encoding_pattern,
-            "force_now": force_now
+            "encoding": {
+                "pattern": encoding_pattern,
+                "force_now": force_now
+            }
         }
-        self.__verbose__("Transmitting encoding. Datapacket: {}".format(datapacket))
+        self.__info__("Transmitting encoding. Datapacket: {}".format(datapacket))
         if self.__use_session__:
             r = self.__session__.post(self.__make_url__() + "/devices/encoding", json=datapacket)
         else:
