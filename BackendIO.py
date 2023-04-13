@@ -72,10 +72,10 @@ class BackendIO:
     
     def __del__(self):
         """Deletes the session."""
-        self.__info__("Deleting BackendIO session.")
-        if self.__use_session__:
+        if self.__use_session__ and self.__session__ is not None:
+            self.__info__("Deleting BackendIO session.")
             self.__session__.close()
-        self.__info__("Deleted BackendIO session.")
+            self.__info__("Deleted BackendIO session.")
 
     def __info__(self, message: str):
         """Logs an info message.
