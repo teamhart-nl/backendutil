@@ -20,7 +20,7 @@ class BackendIO:
 
     # Configurable
     __use_session__ = False
-    __url__: str = None
+    __address__: str = None
     __port__: int = None
     __log_info__ = True
     __log_verbose__ = False
@@ -31,7 +31,7 @@ class BackendIO:
     def __init__(
             self,
             use_session: bool = False,
-            url: str = "http://localhost:",
+            address: str = "http://localhost:",
             port: int = 8000,
             headers: 'dict[str, str]' = {'Content-Type' : 'application/json'},
             log_info: bool = True,
@@ -44,7 +44,7 @@ class BackendIO:
                 Makes transmission faster, but it occupies the connection,
                 which may cause problems when using multiple instances.
                 Defaults to `False`.
-        - url (`str`, optional): The URL to the backend. Defaults to `http://localhost:`
+        - address (`str`, optional): The address to the backend. Defaults to `http://localhost:`
         - port (`int`, optional): The port of the backend. Defaults to `8000`
         - headers (`dict[str, str]`, optional): The headers to use for the requests.
                 Defaults to `{'Content-Type' : 'application/json'}`.
@@ -53,7 +53,7 @@ class BackendIO:
         - log_verbose (`bool`, optional): Whether to log verbose messages. Defaults to `False`.
         """
         self.__use_session__ = use_session
-        self.__url__ = url
+        self.__address__ = address
         self.__port__ = port
         self.__log_info__ = log_info
         self.__log_verbose__ = log_verbose
@@ -62,13 +62,13 @@ class BackendIO:
             self.__session__ = Session()
             self.__session__.headers.update(headers)
 
-    def __url__(self):
+    def __make_url__(self):
         """Returns the URL to the backend.
 
         Returns:
             str: The URL to the backend.
         """
-        return self.__url__ + str(self.__port__)
+        return self.__address__ + str(self.__port__)
     
     def __del__(self):
         """Deletes the session."""
@@ -200,9 +200,9 @@ class BackendIO:
         }
         self.__verbose__("Transmitting encoding. Datapacket: {}".format(datapacket))
         if self.__use_session__:
-            r = self.__session__.post(self.__url__() + "/devices/encoding", json=datapacket)
+            r = self.__session__.post(self.__make_url__() + "/devices/encoding", json=datapacket)
         else:
-            r = requests.post(self.__url__() + "/devices/encoding", json=datapacket)
+            r = requests.post(self.__make_url__() + "/devices/encoding", json=datapacket)
         code = r.status_code
 
         return code
