@@ -73,7 +73,6 @@ class BackendIO:
     def __del__(self):
         """Deletes the session."""
         if self.__use_session__ and self.__session__ is not None:
-            self.__info__("Deleting BackendIO session.")
             self.__session__.close()
             self.__info__("Deleted BackendIO session.")
 
@@ -142,7 +141,8 @@ class BackendIO:
                 "pattern": pattern[1]
             })
 
-        self.__info__("Registering patterns: {}".format(
+        self.__info__("Registering {} patterns".format(len(register_datapacket['patterns'])))
+        self.__verbose__("Patterns: {}".format(
             ", ".join([pattern['pattern_name'] for pattern in register_datapacket['patterns']])
         ))
 
