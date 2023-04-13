@@ -71,12 +71,12 @@ class BackendIO:
     
     def __del__(self):
         """Deletes the session."""
-        self.__log_info__("Deleting BackendIO session.")
+        self.__info__("Deleting BackendIO session.")
         if self.__use_session__:
             self.__session__.close()
-        self.__log_info__("Deleted BackendIO session.")
+        self.__info__("Deleted BackendIO session.")
 
-    def __log_info__(self, message: str):
+    def __info__(self, message: str):
         """Logs an info message.
 
         Args:
@@ -85,7 +85,7 @@ class BackendIO:
         if self.__log_info__:
             print(message)
 
-    def __log_verbose__(self, message: str):
+    def __verbose__(self, message: str):
         """Logs a verbose message.
 
         Args:
@@ -109,14 +109,14 @@ class BackendIO:
         Returns:
         - `tuple(int, list[str])`: The return code and the registered patterns.
         """
-        self.__log_verbose__("Registering patterns. Patterns: {}, Path: {}".format(patterns, path))
+        self.__verbose__("Registering patterns. Patterns: {}, Path: {}".format(patterns, path))
 
         # Load all .json files in the cwd
         files = glob.glob(os.getcwd() + path)
 
         # If there are none, print a message and exit
         if len(files) == 0:
-            self.__log_info__("No .json files found in the {} directory to register.".format(os.getcwd() + path))
+            self.__info__("No .json files found in the {} directory to register.".format(os.getcwd() + path))
             return
 
         # Create the dictionary
@@ -141,7 +141,7 @@ class BackendIO:
                 "pattern": pattern[1]
             })
 
-        self.__log_info__("Registering patterns: {}".format(
+        self.__info__("Registering patterns: {}".format(
             ", ".join([pattern['pattern_name'] for pattern in register_datapacket['patterns']])
         ))
 
@@ -152,7 +152,7 @@ class BackendIO:
             r = requests.post(self.__url__(), json=register_datapacket)
         code = r.status_code
 
-        self.__log_verbose__("Registered patterns. Return code: {}, Patterns: {}".format(code, register_datapacket['patterns']))
+        self.__verbose__("Registered patterns. Return code: {}, Patterns: {}".format(code, register_datapacket['patterns']))
 
         return code, register_datapacket['patterns']
     
@@ -172,7 +172,7 @@ class BackendIO:
             "pattern_name": pattern_name,
             "force_now": force_now
         }
-        self.__log_info__("Transmitting pattern. Pattern: {}, Force now: {}".format(pattern_name, force_now))
+        self.__info__("Transmitting pattern. Pattern: {}, Force now: {}".format(pattern_name, force_now))
         if self.__use_session__:
             r = self.__session__.post(self.__url__() + "/devices/pattern", json=payload)
         else:
@@ -192,12 +192,12 @@ class BackendIO:
         - `int`: The return code.
         """
         # Make a post request to the API
-        self.__log_info__("Transmitting encoding. Encoding: {}, Force now: {}".format(encoding_pattern, force_now))
+        self.__info__("Transmitting encoding. Encoding: {}, Force now: {}".format(encoding_pattern, force_now))
         datapacket = {
             "encoding": encoding_pattern,
             "force_now": force_now
         }
-        self.__log_verbose__("Transmitting encoding. Datapacket: {}".format(datapacket))
+        self.__verbose__("Transmitting encoding. Datapacket: {}".format(datapacket))
         if self.__use_session__:
             r = self.__session__.post(self.__url__() + "/devices/encoding", json=datapacket)
         else:
