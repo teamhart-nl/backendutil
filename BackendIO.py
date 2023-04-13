@@ -30,7 +30,7 @@ class BackendIO:
 
     def __init__(
             self,
-            use_session: bool,
+            use_session: bool = False,
             url: str = "http://localhost:",
             port: int = 8000,
             headers: 'dict[str, str]' = {'Content-Type' : 'application/json'},
@@ -43,6 +43,7 @@ class BackendIO:
         - use_session (`bool`): whether to use a session for the requests.
                 Makes transmission faster, but it occupies the connection,
                 which may cause problems when using multiple instances.
+                Defaults to `False`.
         - url (`str`, optional): The URL to the backend. Defaults to `http://localhost:`
         - port (`int`, optional): The port of the backend. Defaults to `8000`
         - headers (`dict[str, str]`, optional): The headers to use for the requests.
