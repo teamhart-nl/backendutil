@@ -94,7 +94,7 @@ class BackendIO:
         if self.__log_verbose__:
             print(message)
 
-    def register_patterns(self, patterns: 'list[(str, str)]' = [], path = "*.json") -> 'tuple(int, list[str])':
+    def register_patterns(self, patterns: 'list[(str, str)]' = [], path = "\*.json") -> 'tuple(int, "list[str]")':
         """Registers patterns to the backend.\n
         - Uses patterns in the `patterns` argument.
         - Uses `.json` found in the 'current-working-directory/path'.
@@ -148,9 +148,9 @@ class BackendIO:
 
         # Make a post request to the API
         if self.__use_session__:
-            r = self.__session__.post(self.__url__(), json=register_datapacket)
+            r = self.__session__.post(self.__make_url__(), json=register_datapacket)
         else:
-            r = requests.post(self.__url__(), json=register_datapacket)
+            r = requests.post(self.__make_url__(), json=register_datapacket)
         code = r.status_code
 
         self.__verbose__("Registered patterns. Return code: {}, Patterns: {}".format(code, register_datapacket['patterns']))
@@ -175,9 +175,9 @@ class BackendIO:
         }
         self.__info__("Transmitting pattern. Pattern: {}, Force now: {}".format(pattern_name, force_now))
         if self.__use_session__:
-            r = self.__session__.post(self.__url__() + "/devices/pattern", json=payload)
+            r = self.__session__.post(self.__make_url__() + "/devices/pattern", json=payload)
         else:
-            r = requests.post(self.__url__() + "/devices/pattern", json=payload)
+            r = requests.post(self.__make_url__() + "/devices/pattern", json=payload)
         return r.status_code
 
     def encoding(self, encoding_pattern: str, force_now: bool = False) -> int:
